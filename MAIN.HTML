@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUAN Innovations and Research Society (BIRS)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style id="app-style">
+        :root {
+            --primary: #52ad16;
+            --primary-light: #8b5cf6;
+            --secondary: #10b981;
+            --secondary-light: #34d399;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        .hero-pattern {
+            background-color: #f8fafc;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .card {
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .executive-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 5px 15px rgba(109, 40, 217, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .gallery-img {
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .lightbox-content {
+            position: relative;
+            max-width: 80%;
+            max-height: 80%;
+        }
+        
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 4px;
+        }
+        
+        .lightbox-caption {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
+        .lightbox-prev {
+            left: 20px;
+        }
+        
+        .lightbox-next {
+            right: 20px;
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .scroll-down {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Mobile navigation */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background-color: white;
+            z-index: 100;
+            padding: 24px;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .mobile-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-nav-toggle {
+                display: block;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .desktop-nav {
+                display: flex;
+            }
+            
+            .mobile-nav-toggle {
+                display: none;
+            }
+            .emails{
+color: #1e293b;
+            }
+            .messages{
+                color: #1e293b;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full bg-white bg-opacity-95 backdrop-blur-sm shadow-sm z-50" x-data="{ mobileMenuOpen: false }">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="text-xl font-bold mr-2">BIRS</h1>
+                <span class="text-sm text-gray-600 hidden md:inline-block">| Innovations & Research Society</span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="desktop-nav items-center space-x-1">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#executives" class="nav-link">Team</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="https://wa.me/26777593768" target="_blank" class="btn btn-primary ml-4">
+                    <i class="fab fa-whatsapp mr-2"></i> Chat
+                </a>
+            </div>
+            
+            <!-- Mobile Navigation Toggle -->
+            <button class="mobile-nav-toggle text-2xl" @click="mobileMenuOpen = !mobileMenuOpen">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Background Image -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" 
+             style="background-image: url('birs-project124.jfif');">
+        
+        <!-- Dark overlay for better text readability -->
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        
+        <!-- Content -->
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
+                Welcome to BIRS
+            </h1>
+            <p class="text-xl md:text-2xl text-white mb-8">
+                Innovations & Research Society
+            </p>
+            
+            <!-- Optional call-to-action buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#about" class="btn btn-primary px-8 py-3 text-lg">
+                    Learn More
+                </a>
+                <a href="#contact" class="btn btn-secondary px-8 py-3 text-lg border border-white text-white hover:bg-white hover:text-black">
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </section>
+<body>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full bg-white bg-opacity-95 backdrop-blur-sm shadow-sm z-50" x-data="{ mobileMenuOpen: false }">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="text-xl font-bold mr-2">BIRS</h1>
+                <span class="text-sm text-gray-600 hidden md:inline-block">| Innovations & Research Society</span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="desktop-nav items-center space-x-1">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#executives" class="nav-link">Team</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="https://wa.me/26777593768" target="_blank" class="btn btn-primary ml-4">
+                    <i class="fab fa-whatsapp mr-2"></i> Chat
+                </a>
+            </div>
+            
+            <!-- Mobile Navigation Toggle -->
+            <button class="mobile-nav-toggle text-2xl" @click="mobileMenuOpen = !mobileMenuOpen">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    
+        <!-- Mobile Menu -->
+        <div class="mobile-overlay" :class="{'active': mobileMenuOpen}" @click="mobileMenuOpen = false"></div>
+        <div class="mobile-menu" :class="{'active': mobileMenuOpen}">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-xl font-bold">BIRS</h1>
+                <button @click="mobileMenuOpen = false" class="text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="nav-link" @click="mobileMenuOpen = false">Home</a>
+                <a href="#about" class="nav-link" @click="mobileMenuOpen = false">About</a>
+                <a href="#executives" class="nav-link" @click="mobileMenuOpen = false">Team</a>
+                <a href="#gallery" class="nav-link" @click="mobileMenuOpen = false">Gallery</a>
+                <a href="#contact" class="nav-link" @click="mobileMenuOpen = false">Contact</a>
+                <a href="https://wa.me/26777593768" target="_blank" class="btn btn-primary mt-4">
+                    <i class="fab fa-whatsapp mr-2"></i> Chat on WhatsApp
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-32 pb-20 hero-pattern min-h-screen flex flex-col justify-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="inline-block px-4 py-2 rounded-full bg-purple-100 text-purple-800 font-medium text-sm mb-6">Welcome to BIRS</span>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">BUAN <span class="gradient-text">Innovations</span> and <span class="gradient-text">Research</span> Society</h1>
+                <p class="text-xl md:text-2xl text-gray-600 mb-8">"At the intersection of innovation and research"</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#about" class="btn btn-primary">
+                        Discover More
+                    </a>
+                    <a href="#contact" class="btn bg-white border-2 border-purple-600 text-purple-600 hover:bg-purple-50">
+                        Join Us
+                    </a>
+                </div>
+                <div class="mt-20">
+                    <a href="#about" class="inline-block text-gray-500 animate-bounce">
+                        <i class="fas fa-chevron-down text-3xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
+                <span class="inline-block px-4 py-2 rounded-full bg-green-100 text-green-800 font-medium text-sm mb-6">Our Mission</span>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">About BIRS</h2>
+                <div class="w-20 h-1 gradient-bg mx-auto mb-6"></div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                <div class="md:w-1/2 animate-on-scroll">
+                    <img src="https://cdn.pixabay.com/photo/2018/03/10/12/00/teamwork-3213924_1280.jpg" alt="BIRS Team Collaboration" class="w-full h-auto rounded-2xl shadow-lg">
+                </div>
+                <div class="md:w-1/2 animate-on-scroll" style="animation-delay: 0.2s;">
+                    <h3 class="text-2xl font-bold mb-4">Empowering Student Innovation</h3>
+                    <p class="text-gray-700 mb-4">BUAN Innovations and Research Society (BIRS) is dedicated to connecting students with experts, organizations, and companies that can help them upskill and transform their ideas into tangible businesses.</p>
+                    <p class="text-gray-700 mb-6">We believe that innovation happens at the intersection of diverse disciplines, ideas, and perspectives. Through workshops, networking events, mentorship programs, and collaborative projects, we create opportunities for students to explore their potential and make a meaningful impact.</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center text-white mr-3">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <span class="font-medium">Innovation</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center text-white mr-3">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <span class="font-medium">Research</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center text-white mr-3">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span class="font-medium">Networking</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center text-white mr-3">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <span class="font-medium">Entrepreneurship</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 gradient-bg text-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="animate-on-scroll">
+                    <div class="text-4xl font-bold mb-2">100+</div>
+                    <div class="text-sm uppercase tracking-wider">Members</div>
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.2s;">
+                    <div class="text-4xl font-bold mb-2">20+</div>
+                    <div class="text-sm uppercase tracking-wider">Events Hosted</div>
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.4s;">
+                    <div class="text-4xl font-bold mb-2">15+</div>
+                    <div class="text-sm uppercase tracking-wider">Partner Organizations</div>
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.6s;">
+                    <div class="text-4xl font-bold mb-2">5+</div>
+                    <div class="text-sm uppercase tracking-wider">Startups Launched</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Executives Section -->
+    <section id="executives" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
+                <span class="inline-block px-4 py-2 rounded-full bg-purple-100 text-purple-800 font-medium text-sm mb-6">Our Leadership</span>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Meet the Executives</h2>
+                <div class="w-20 h-1 gradient-bg mx-auto mb-6"></div>
+                <p class="text-gray-600">Get to know the passionate individuals leading BIRS towards innovation and excellence.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Founder -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll">
+                    <img src="RAYMOND.jpeg" alt="Founder" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Mr Raymond Seanego</h3>
+                    <div class="text-purple-600 font-medium mb-3">Founder & President</div>
+                    <p class="text-gray-600 mb-4">BSc Biomathematics student. Has a deep passion for combining technology with entrepreneurship. Founded BIRS to create a platform for student innovation.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Co-founder -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 0.2s;">
+                    <img src="UNITY.jpeg" alt="Co-founder" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Ms Unity Ndimande</h3>
+                    <div class="text-purple-600 font-medium mb-3">Co-founder & Vice President</div>
+                    <p class="text-gray-600 mb-4">BSc Biomathematics student with experience in project management. Passionate about empowering students to turn ideas into viable businesses.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Secretary -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 0.4s;">
+                    <img src="HOPE.jpeg" alt="Secretary" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Ms Hope Obert</h3>
+                    <div class="text-purple-600 font-medium mb-3">Secretary General</div>
+                    <p class="text-gray-600 mb-4">BSc Biomathematics student with exceptional organizational skills. Ensures smooth operation of all BIRS activities and manages communications.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Treasurer -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 0.6s;">
+                    <img src="" alt="Treasurer" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Ms Bonolo Nkonyane</h3>
+                    <div class="text-purple-600 font-medium mb-3">Treasurer</div>
+                    <p class="text-gray-600 mb-4">BSc Biomathematics student with experience in budgeting and financial planning. Manages BIRS funds and ensures financial sustainability of our initiatives.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Training and  Skills Officer-->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 0.8s;">
+                    <img src="THEO.jpeg" alt="Events Coordinator" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Mr Theo Thapelo</h3>
+                    <div class="text-purple-600 font-medium mb-3">Training and Skills Officer</div>
+                    <p class="text-gray-600 mb-4">BSc Biomathematics student with a knack for event planning. Creates engaging workshops, seminars, and networking opportunities for BIRS members.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <!-- Outreach Officer -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 0.8s;">
+                    <img src="CANDICE.jpeg" alt="Events Coordinator" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Ms Candice Mothobi</h3>
+                    <div class="text-purple-600 font-medium mb-3">Training and Skills Officer</div>
+                    <p class="text-gray-600 mb-4">BSc Biodiversity and Conservation student with a knack for outreach and networking. Creates networking opportunities for BIRS members.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div><!-- SHE Officer -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 0.8s;">
+                    <img src="PAKO.jpeg" alt="Events Coordinator" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Mr Pako Kgaswane</h3>
+                    <div class="text-purple-600 font-medium mb-3">Training and Skills Officer</div>
+                    <p class="text-gray-600 mb-4">BSc Food Science and Technology student with a knack for event planning. Creates engaging workshops, seminars, and networking opportunities for BIRS members.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                    <!-- Public Relations Officer -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 1s;">
+                    <img src="PRINCESS.jpeg" alt="PR Officer" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Ms Princess Bapege</h3>
+                    <div class="text-purple-600 font-medium mb-3">Public Relations Officer</div>
+                    <p class="text-gray-600 mb-4">BSc Biomathematics student with excellent communication skills. Manages BIRS social media presence and builds relationships with external partners.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                    <!-- Additional Member -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 1s;">
+                    <img src="" alt="PR Officer" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Ms Lydia Obuseng</h3>
+                    <div class="text-purple-600 font-medium mb-3">Additional member</div>
+                    <p class="text-gray-600 mb-4">BSc Range Science student with excellent communication skills. Manages BIRS social media presence and builds relationships with external partners.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                    <!-- Additional Member -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 1s;">
+                    <img src="" alt="PR Officer" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Mr Asante </h3>
+                    <div class="text-purple-600 font-medium mb-3">Additional Member</div>
+                    <p class="text-gray-600 mb-4">BSc Agricultural Mechanisation major with excellent communication skills. Helps manage BIRS social media presence.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                 <!-- Additional Member -->
+                <div class="card p-8 flex flex-col items-center text-center animate-on-scroll" style="animation-delay: 1s;">
+                    <img src="AGNES.jpeg" alt="PR Officer" class="executive-img mb-6">
+                    <h3 class="text-xl font-bold mb-1">Ms Agnes Gabotshetswe </h3>
+                    <div class="text-purple-600 font-medium mb-3">Secretary to the Training and Skills Officer</div>
+                    <p class="text-gray-600 mb-4">BSc Animal science major with excellent communication skills. Helps manage BIRS social media presence.</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="javascript:void(0)" class="hover:text-purple-600 transition-colors"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+               
+               </div>
+    </section>
+
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
+                <span class="inline-block px-4 py-2 rounded-full bg-green-100 text-green-800 font-medium text-sm mb-6">Our Activities</span>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Gallery</h2>
+                <div class="w-20 h-1 gradient-bg mx-auto mb-6"></div>
+                <p class="text-gray-600">Explore moments from our events, workshops, and networking sessions.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="animate-on-scroll">
+                    <img src="https://cdn.pixabay.com/photo/2016/11/14/03/35/entrepreneur-1822553_1280.jpg" alt="Workshop Session" class="gallery-img w-full" data-lightbox="1" data-caption="Workshop on Business Model Canvas">
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.2s;">
+                    <img src="https://cdn.pixabay.com/photo/2015/01/09/11/08/startup-594090_1280.jpg" alt="Brainstorming Session" class="gallery-img w-full" data-lightbox="2" data-caption="Team Brainstorming Session">
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.4s;">
+                    <img src="https://cdn.pixabay.com/photo/2015/07/31/11/45/library-869061_1280.jpg" alt="Research Session" class="gallery-img w-full" data-lightbox="3" data-caption="Student Research Collaboration">
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.6s;">
+                    <img src="https://cdn.pixabay.com/photo/2019/04/14/10/28/seminar-4126248_1280.jpg" alt="Guest Speaker Event" class="gallery-img w-full" data-lightbox="4" data-caption="Industry Expert Guest Lecture">
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 0.8s;">
+                    <img src="https://cdn.pixabay.com/photo/2018/03/27/12/16/people-3265234_1280.jpg" alt="Networking Event" class="gallery-img w-full" data-lightbox="5" data-caption="Networking Mixer with Industry Partners">
+                </div>
+                <div class="animate-on-scroll" style="animation-delay: 1s;">
+                    <img src="https://cdn.pixabay.com/photo/2018/03/10/12/00/teamwork-3213924_1280.jpg" alt="Team Building" class="gallery-img w-full" data-lightbox="6" data-caption="Team Building Activity">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content">
+            <img class="lightbox-img" src="" alt="Gallery Image">
+            <div class="lightbox-caption"></div>
+            <div class="lightbox-nav lightbox-prev"><i class="fas fa-chevron-left"></i></div>
+            <div class="lightbox-nav lightbox-next"><i class="fas fa-chevron-right"></i></div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+
+<section id="contact" class="py-20 gradient-bg text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
+            <span class="inline-block px-4 py-2 rounded-full bg-white bg-opacity-20 text-white font-medium text-sm mb-6">Get In Touch</span>
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Contact Us</h2>
+            <div class="w-20 h-1 bg-white mx-auto mb-6"></div>
+            <p class="text-white text-opacity-80">Have questions or want to get involved? Reach out to us!</p>
+        </div>
+        <form
+  action="https://formspree.io/f/xjgpyega"
+  method="POST"
+>
+  <label>
+    Your email:
+    <input type="email" name="email" class="emails">
+  </label>
+  <br>
+  <br>
+  <label>
+    Your message:
+    <textarea name="message" class="messages"></textarea>
+  </label>
+  <!-- your other form fields go here -->
+  <button type="submit">Send</button>
+</form>
+<br>
+<br>
+     
+                <div class="animate-on-scroll" style="animation-delay: 0.3s;">
+                    <div class="bg-white bg-opacity-10 p-8 rounded-2xl h-full">
+                        <h3 class="text-2xl font-bold mb-6">Connect With Us</h3>
+                        
+                        <div class="flex items-start mb-6">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white mr-4 shrink-0">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium mb-1">Email</h4>
+                                <a href="mailto:buan.irs@gmail.com" class="text-white text-opacity-80 hover:text-opacity-100">buan.irs@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start mb-6">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white mr-4 shrink-0">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium mb-1">WhatsApp</h4>
+                                <a href="https://wa.me/26777593768" target="_blank" class="text-white text-opacity-80 hover:text-opacity-100">+267 7759 3768</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start mb-8">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white mr-4 shrink-0">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium mb-1">Location</h4>
+                                <p class="text-white text-opacity-80">Botswana University of Agriculture and Natural Resources</p>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-lg font-medium mb-3">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="https://www.bing.com/ck/a?!&&p=6d1847f375bd3f16e8dec23b544614af13975b5514f52b665a5f7d114a2eaf6aJmltdHM9MTc3NDc0MjQwMA&ptn=3&ver=2&hsh=4&fclid=32bcd48d-70d3-6585-2966-c016717f644b&psq=birs+facebook&u=a1aHR0cHM6Ly93d3cuZmFjZWJvb2suY29tL3Blb3BsZS9CVUFOLUlubm92YXRpb25zLUFuZC1SZXNlYXJjaC1Tb2NpZXR5LUJJUlMvNjE1ODIxNDI0ODIxNzcv" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition duration-200">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="javascript:void(0)" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition duration-200">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="javascript:void(0)" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition duration-200">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="javascript:void(0)" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition duration-200">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-dark text-white text-opacity-80">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h1 class="text-xl font-bold text-white mb-2">BIRS</h1>
+                    <p class="text-sm">"At the intersection of innovation and research"</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 text-sm">
+                    <a href="#home" class="hover:text-white transition duration-200">Home</a>
+                    <a href="#about" class="hover:text-white transition duration-200">About</a>
+                    <a href="#executives" class="hover:text-white transition duration-200">Team</a>
+                    <a href="#gallery" class="hover:text-white transition duration-200">Gallery</a>
+                    <a href="#contact" class="hover:text-white transition duration-200">Contact</a>
+                </div>
+                
+                <div class="mt-6 md:mt-0">
+                    <div class="flex space-x-4">
+                        <a href="javascript:void(0)" class="text-white text-opacity-70 hover:text-opacity-100 transition duration-200">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="text-white text-opacity-70 hover:text-opacity-100 transition duration-200">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="text-white text-opacity-70 hover:text-opacity-100 transition duration-200">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="text-white text-opacity-70 hover:text-opacity-100 transition duration-200">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm">
+                <p>&copy; 2025 BUAN Innovations and Research Society. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Contact Bar (fixed at bottom on mobile) -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg z-30 px-4 py-3 flex items-center justify-around">
+        <a href="https://wa.me/26777593768" class="flex flex-col items-center text-purple-600">
+            <i class="fab fa-whatsapp text-xl"></i>
+            <span class="text-xs mt-1">WhatsApp</span>
+        </a>
+        <a href="mailto:buan.irs@gmail.com" class="flex flex-col items-center text-purple-600">
+            <i class="fas fa-envelope text-xl"></i>
+            <span class="text-xs mt-1">Email</span>
+        </a>
+        <a href="#contact" class="flex flex-col items-center text-purple-600">
+            <i class="fas fa-paper-plane text-xl"></i>
+            <span class="text-xs mt-1">Message</span>
+        </a>
+    </div>
+
+    <script id="app-script">
+        // Intersection Observer for animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll animations
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // Lightbox functionality
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.querySelector('.lightbox-img');
+            const lightboxCaption = document.querySelector('.lightbox-caption');
+            const lightboxClose = document.querySelector('.lightbox-close');
+            const lightboxPrev = document.querySelector('.lightbox-prev');
+            const lightboxNext = document.querySelector('.lightbox-next');
+            const galleryImages = document.querySelectorAll('[data-lightbox]');
+            
+            let currentImageIndex = 0;
+            
+            // Open lightbox
+            galleryImages.forEach((img, index) => {
+                img.addEventListener('click', () => {
+                    lightbox.classList.add('active');
+                    lightboxImg.src = img.src;
+                    lightboxCaption.textContent = img.dataset.caption;
+                    currentImageIndex = index;
+                });
+            });
+            
+            // Close lightbox
+            lightboxClose.addEventListener('click', () => {
+                lightbox.classList.remove('active');
+            });
+            
+            // Previous image
+            lightboxPrev.addEventListener('click', () => {
+                currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+                lightboxImg.src = galleryImages[currentImageIndex].src;
+                lightboxCaption.textContent = galleryImages[currentImageIndex].dataset.caption;
+            });
+            
+            // Next image
+            lightboxNext.addEventListener('click', () => {
+                currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+                lightboxImg.src = galleryImages[currentImageIndex].src;
+                lightboxCaption.textContent = galleryImages[currentImageIndex].dataset.caption;
+            });
+            
+            // Close lightbox on outside click
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) {
+                    lightbox.classList.remove('active');
+                }
+            });
+            
+            // Navigation Links Active State
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (pageYOffset >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            // Form submission (placeholder)
+            const contactForm = document.querySelector('form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                   
+                });
+            }
+        });
+    </script>
+</body>
+</html>
