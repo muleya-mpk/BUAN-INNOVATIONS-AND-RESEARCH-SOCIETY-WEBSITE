@@ -306,6 +306,7 @@ color: #1e293b;
                 <a href="#executives" class="nav-link">Team</a>
                 <a href="#gallery" class="nav-link">Gallery</a>
                 <a href="#contact" class="nav-link">Contact</a>
+                <a href="#events" class="nav-link">Events</a>
                 <a href="https://wa.me/26777593768" target="_blank" class="btn btn-primary ml-4">
                     <i class="fab fa-whatsapp mr-2"></i> Chat
                 </a>
@@ -361,6 +362,7 @@ color: #1e293b;
                 <a href="#executives" class="nav-link">Team</a>
                 <a href="#gallery" class="nav-link">Gallery</a>
                 <a href="#contact" class="nav-link">Contact</a>
+                <a href="#events" class="nav-link">Events</a>
                 <a href="https://wa.me/26777593768" target="_blank" class="btn btn-primary ml-4">
                     <i class="fab fa-whatsapp mr-2"></i> Chat
                 </a>
@@ -387,6 +389,7 @@ color: #1e293b;
                 <a href="#executives" class="nav-link" @click="mobileMenuOpen = false">Team</a>
                 <a href="#gallery" class="nav-link" @click="mobileMenuOpen = false">Gallery</a>
                 <a href="#contact" class="nav-link" @click="mobileMenuOpen = false">Contact</a>
+                <a href="#events" class="nav-link" @click="mobileMenuOpen = false">Events</a>
                 <a href="https://wa.me/26777593768" target="_blank" class="btn btn-primary mt-4">
                     <i class="fab fa-whatsapp mr-2"></i> Chat on WhatsApp
                 </a>
@@ -685,6 +688,29 @@ color: #1e293b;
         </div>
     </div>
 
+
+ <!-- ============================================================ -->
+    <!-- JAVASCRIPT-DRIVEN EVENTS                          -->
+    <!-- To add/edit an event: scroll to the <script> tag at the     -->
+    <!-- bottom of this file and find the `events` array.            -->
+    <!-- Add a new object to the array following the same format.    -->
+    <!-- The cards on this page will generate automatically.         -->
+    <!-- ============================================================ -->
+    <section id="events" class="py-20 hero-pattern">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
+                <span class="inline-block px-4 py-2 rounded-full bg-green-100 text-green-800 font-medium text-sm mb-6">What's On</span>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Upcoming <span class="gradient-text">Events</span></h2>
+                <div class="w-20 h-1 gradient-bg mx-auto mb-6"></div>
+                <p class="text-gray-600">Stay up to date with our latest activities, workshops and networking sessions.</p>
+            </div>
+            <!-- Cards are injected here automatically by the events array in the script below -->
+            <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+
     <!-- Contact Section -->
 
 <section id="contact" class="py-20 gradient-bg text-white">
@@ -827,7 +853,63 @@ color: #1e293b;
         </a>
     </div>
 
-    <script id="app-script">
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script id="app-script">
+
+        // ============================================================
+        // EVENTS ARRAY — Edit this to manage your events
+        // Add a new object inside the array to add a new event card.
+        // ============================================================
+        const events = [
+            {
+                date: "15",
+                month: "April 2026",
+                title: "Research Symposium",
+                description: "Annual student research showcase where members present their ongoing projects to peers and faculty.",
+                time: "10:00 AM",
+                location: "BUAN Main Hall"
+            },
+            {
+                date: "22",
+                month: "May 2026",
+                title: "Innovation Workshop",
+                description: "A hands-on workshop focused on business model canvas and lean startup methodology for student entrepreneurs.",
+                time: "2:00 PM",
+                location: "BUAN Campus, Room 204"
+            },
+            {
+                date: "10",
+                month: "June 2026",
+                title: "Networking Mixer",
+                description: "Connect with industry professionals, alumni and fellow students in a relaxed networking environment.",
+                time: "5:30 PM",
+                location: "BUAN Multipurpose Hall"
+            }
+            // ADD MORE EVENTS HERE — copy the block above, paste it after this line, and update the values
+        ];
+
+        // Render event cards — no need to edit below this line
+        const eventsGrid = document.getElementById('events-grid');
+        if (eventsGrid) {
+            events.forEach((event, index) => {
+                const delay = (index * 0.2).toFixed(1);
+                eventsGrid.innerHTML += `
+                <div class="card p-6 animate-on-scroll" style="animation-delay: ${delay}s;">
+                    <div class="gradient-bg text-white text-center rounded-lg py-3 mb-4">
+                        <span class="text-3xl font-bold">${event.date}</span>
+                        <p class="text-sm font-medium">${event.month}</p>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">${event.title}</h3>
+                    <p class="text-gray-500 text-sm mb-4">${event.description}</p>
+                    <div class="flex items-center text-sm text-gray-400 mb-2">
+                        <i class="fas fa-clock mr-2 text-green-500"></i> ${event.time}
+                    </div>
+                    <div class="flex items-center text-sm text-gray-400">
+                        <i class="fas fa-map-marker-alt mr-2 text-green-500"></i> ${event.location}
+                    </div>
+                </div>`;
+            });
+        }
+
         // Intersection Observer for animations
         document.addEventListener('DOMContentLoaded', function() {
             // Scroll animations
